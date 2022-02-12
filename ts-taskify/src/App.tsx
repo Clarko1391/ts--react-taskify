@@ -1,5 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
+
+import { Todo } from './model';
+
+import InputField from './components/InputField';
+import TodoList from './components/TodoList';
 
 
 // ============================================================================
@@ -74,37 +79,83 @@ import './App.css';
 // === Functions === 
 
 // Method 1
-let printName: Function;
+// let printName: Function;
 
-printName = ( name: string ) => {
-  console.log(name);
-};
+// printName = ( name: string ) => {
+//   console.log(name);
+// };
 
-printName("Piyush");
+// printName("Piyush");
 
 // Method 2
 // define argument types and return types, if no return, void
 // void returns undefined, never doesn't return anything
-let printBetterName: ( name:string ) => void
+// let printBetterName: ( name:string ) => void
 
-printBetterName = ( name: string ) => {
-  console.log(name);
-}
+// printBetterName = ( name: string ) => {
+//   console.log(name);
+// }
 
-printBetterName("Meredith")
+// printBetterName("Meredith")
 
 // ============================================================================
 // end of typing pratice
 // ============================================================================
 
 
+// Convert standard function to functional component and apply type
+// Type React.FC is "Functional Component", "ReactNode" type supports all types
+const App: React.FC = () => 
+{
+
+  // ==========================================================================
+  // No state management system present, just using local state for now
+  // Should provide type to the state as below, can also use unions if needed
+  // the todo is a string todo, todos is an array of Todos with more props 
+  // ==========================================================================
 
 
-function App() {
-  
+  const [todo, setTodo] = useState<string>("");
+
+  const [todos, setTodos] = useState<Todo[]>([]);
+
+  const handleAdd = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (todo) {
+
+      setTodos(
+        [
+          ...todos, 
+          { 
+            id: Date.now(), 
+            todo, 
+            is_done: false 
+          }
+        ]
+      )
+
+      setTodo("");
+    }
+  };
+
+
   return (
     <div className="App">
-      Hello World!
+      
+      <span className="heading">Taskify</span>
+
+      <InputField 
+        todo={todo}
+        setTodo={setTodo}
+        handleAdd={handleAdd}
+        />
+
+      <TodoList 
+        todos={todos}
+        setTodos={setTodos}
+        />
+      
     </div>
   );
 }
